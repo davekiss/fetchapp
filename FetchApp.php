@@ -135,9 +135,9 @@ class FetchApp
      */
     protected function send_request( $request, $data = NULL )
     {
-        var_dump( $request, $data );
-        return array( 'success' => false );
-        $request_uri = '/api/v2' . $request['page'];
+        //var_dump( $request, $data );
+        //return array( 'success' => false );
+        $request_uri = self::$api['uri'] . $request['page'];
         $credentials = self::$api['key'] . ':' . self::$api['token'];
 
         $headers = array(
@@ -146,7 +146,7 @@ class FetchApp
         );
 
         $ch = curl_init();
-        curl_setopt( $ch, CURLOPT_URL, self::$api['uri'] . $request_uri['page'] );
+        curl_setopt( $ch, CURLOPT_URL, $request_uri );
         curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
         curl_setopt( $ch, CURLOPT_TIMEOUT, 600 );
         curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
@@ -166,7 +166,7 @@ class FetchApp
             throw new FetchAppException( curl_error( $ch ) );
         }
         curl_close( $ch );
-        return $ch_data;
+        return simplexml_load_string($ch_data);
     }
     // }}}
 }
